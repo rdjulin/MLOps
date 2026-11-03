@@ -1,8 +1,5 @@
 # **Module 2 Assignment: Model Training and Experiment Tracking Overview**
 
-In this assignment, you will train an MNIST classifier in PyTorch and monitor the training with Weights & Biases (W&B).
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -31,18 +28,22 @@ class LogisticRegression(nn.Module):
         x = x.view(x.size(0), -1)
         return self.network(x)
 
+def unnormalize(tensor, mean=0.1307, std=0.3081):
+    """Reverses the MNIST normalization so images render correctly."""
+    return tensor * std + mean
+
 # Hyperparameters to experiment with
 config = {
     "learning_rate": 0.01,
     "epochs": 10,
     "batch_size": 64,
-    "hidden_layers": [128, 64],  # Example: two hidden layers
+    "hidden_layers": [128, 64],
     "dropout_rate": 0.2
 }
 
 # Initialize wandb
 wandb.init(project="mnist-mlops", config=config)
-config = wandb.config  # use this so values are read as config.batch_size, etc.
+config = wandb.config
 
 # Load and preprocess data
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
@@ -99,6 +100,24 @@ for epoch in range(config.epochs):
     wandb.log({"val_loss": avg_val_loss, "val_accuracy": accuracy})
     print(f"Epoch {epoch+1}/{config.epochs} - Loss: {avg_train_loss:.4f} - Val Loss: {avg_val_loss:.4f} - Val Acc: {accuracy:.2f}%")
 
+# Log final sample validation predictions to W&B as requested
+model.eval()
+images, labels = next(iter(test_loader))
+with torch.no_grad():
+    preds = model(images[:16]).argmax(dim=1)
+
+unnormalized_images = unnormalize(images[:16])
+
+wandb.log({
+    "val_predictions": [
+        wandb.Image(img, caption=f"true={t.item()} pred={q.item()}")
+        for img, t, q in zip(unnormalized_images, labels[:16], preds)
+    ]
+})
+
+# Save the trained model weights
+torch.save(model.state_dict(), "model.pt")
+
 wandb.finish()
 
 # Initialize a new run to log post-training validation analysis
@@ -147,16 +166,23 @@ wandb.log({
     "recall_macro": recall
 })
 
-# Visualize sample predictions
+# Helper function to un-normalize MNIST images back to [0, 1] range
+def unnormalize(tensor, mean=0.1307, std=0.3081):
+    return tensor * std + mean
+
+# Visualize sample predictions with un-normalization implemented
 def log_predictions(model, data, target, num_samples=10):
     model.eval()
     with torch.no_grad():
         output = model(data)
         _, preds = torch.max(output, 1)
 
+    # Un-normalize the batch of images first
+    unnormalized_data = unnormalize(data)
+
     images = []
     for i in range(min(num_samples, len(data))):
-        img = data[i].squeeze().cpu().numpy()
+        img = unnormalized_data[i].squeeze().cpu().numpy()
         pred = preds[i].item()
         truth = target[i].item()
         images.append(wandb.Image(
@@ -169,3 +195,4 @@ def log_predictions(model, data, target, num_samples=10):
 log_predictions(model, next(iter(test_loader))[0][:10], next(iter(test_loader))[1][:10])
 
 wandb.finish()
+
