@@ -28,13 +28,13 @@ From Assignment 1:
 
 - **Model Architecture:** Multi-Layer Perceptron (LogisticRegression) featuring flexible hidden dimensions, ReLU activations, and Dropout layer regularization built using PyTorch.
 
-**Experiment Monitoring:** Fully integrated with Weights & Biases (W&B) to track hyperparameter sweeps, metric variations, confusion matrices, and unnormalized visual batch validation predictions.
+- **Experiment Monitoring:** Fully integrated with Weights & Biases (W&B) to track hyperparameter sweeps, metric variations, confusion matrices, and unnormalized visual batch validation predictions.
 
-**Production API Server:** Microservice backend powered by FastAPI to serve safe and asynchronous model inference over HTTP POST requests.
+- **Production API Server:** Microservice backend powered by FastAPI to serve safe and asynchronous model inference over HTTP POST requests.
 
-**Containerization Engine:** High-performance dockerized packaging utilizing lightweight Python slim baselines paired with CPU-only PyTorch wheels to optimize distribution footprints.
+- **Containerization Engine:** High-performance dockerized packaging utilizing lightweight Python slim baselines paired with CPU-only PyTorch wheels to optimize distribution footprints.
 
-**CI/CD Architecture:** Complete GitHub Actions automation structure configuring validation pipelines via pytest, pushing containerized images to Docker Hub, and deploying live production containers on Heroku registries.
+- **CI/CD Architecture:** Complete GitHub Actions automation structure configuring validation pipelines via pytest, pushing containerized images to Docker Hub, and deploying live production containers on Heroku registries.
 
 ## Local Setup and Running Instructions
 
@@ -96,5 +96,4 @@ You can view the interactive project reports, charts, and hyperparameter sweeps 
 - **W&B Project Report**: https://wandb.ai/r-d-julin-iowa-state-university/mnist-mlops
 """
 
-View project at: https://wandb.ai/r-d-julin-iowa-state-university/mnist-mlops
 
