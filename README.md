@@ -19,13 +19,21 @@ All real-time monitoring loss dynamics, precision charts, and evaluation artifac
 
 From Assignment 1:
 ## Project Overview
+
 - **Model**: A flexible Multi-Layer Perceptron (MLP) supporting customizable hidden dimensions and dropout layers.
+
 - **Framework**: PyTorch & Torchvision.
+
 - **Experiment Tracking**: Managed via [Weights & Biases (W&B)](https://wandb.ai/), tracking training losses, validation accuracies, learning rates, gradient norms, classification metrics (Macro Precision/Recall), and visual sample predictions.
+
 - **Model Architecture:** Multi-Layer Perceptron (LogisticRegression) featuring flexible hidden dimensions, ReLU activations, and Dropout layer regularization built using PyTorch.
+
 **Experiment Monitoring:** Fully integrated with Weights & Biases (W&B) to track hyperparameter sweeps, metric variations, confusion matrices, and unnormalized visual batch validation predictions.
+
 **Production API Server:** Microservice backend powered by FastAPI to serve safe and asynchronous model inference over HTTP POST requests.
+
 **Containerization Engine:** High-performance dockerized packaging utilizing lightweight Python slim baselines paired with CPU-only PyTorch wheels to optimize distribution footprints.
+
 **CI/CD Architecture:** Complete GitHub Actions automation structure configuring validation pipelines via pytest, pushing containerized images to Docker Hub, and deploying live production containers on Heroku registries.
 
 ## Local Setup and Running Instructions
